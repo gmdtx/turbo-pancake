@@ -1,0 +1,36 @@
+version: "3"
+services:
+  product-app:
+    build: .
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - product-mariadb
+      - product-redis
+
+  product-mariadb:
+    image: mariadb:latest
+    command: --innodb-use-native-aio=0
+    restart: always
+    ports:
+      - "3306"
+    volumes:
+      - "./.docker/dbdata:/var/lib/mysql"
+    environment:
+      MARIADB_DATABASE: product
+      MARIADB_ROOT_PASSWORD: root
+
+  product-redis:
+    image: redis:alpine
+    expose:
+      - 6379
+
+  product-nginx:
+    build: ./.docker/nginx
+    restart: always
+    ports:
+      - "8001:80"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - product-app
