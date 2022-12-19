@@ -4,7 +4,10 @@ RUN apt-get update && apt-get install -y \
     bash \
     mariadb-client \
     nodejs \
-    npm
+    npm \
+    git \
+    zip \
+    unzip
 
 RUN docker-php-ext-install pdo pdo_mysql bcmath
 
